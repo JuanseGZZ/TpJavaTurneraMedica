@@ -1,19 +1,20 @@
 package Services;
 
+import DAO.DAOIPedirTurno;
 import Entidades.Hospital;
 import Entidades.Medico;
-import Entidades.Turno;
 
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DAOPedirTurno extends DAOconecction{
+public class DAOPedirTurno extends DAOconecction implements DAOIPedirTurno {
 
     public List<Medico> getMedicos(){
         try {
@@ -52,7 +53,8 @@ public class DAOPedirTurno extends DAOconecction{
 
         String turnosSerch =    "SELECT COUNT(*) AS turnos_ocupados " +
                                 "FROM turnos t " +
-                                "WHERE t.fecha = ? AND t.id = ?";
+                                "WHERE t.fecha = ? AND t.id = ?" +
+                                        "and t.estado > 0";
         // variables a utilizar
 
         int turnosIterar=0; // turnos posibles (para comparar con los tomados en el dia visto para ver si hay alguno disponible)
@@ -177,7 +179,8 @@ public class DAOPedirTurno extends DAOconecction{
                                     "WHERE t.fecha = ?\n" +
                                     "  AND t.HOSPITAL = ?\n" +
                                     "  AND t.MEDICO = ?\n" +
-                                    "  AND t.HORA BETWEEN ? AND ?;";
+                                    "  AND t.HORA BETWEEN ? AND ?"
+                                    +" and t.estado > 0 ;";
         // variables a usar
         int idmedico = 0;
         int idhospital = 0;
@@ -230,7 +233,7 @@ public class DAOPedirTurno extends DAOconecction{
                         // Lógica para cada día en el intervalo
                         this.ps = connection.prepareStatement(getTurnosOcupados);
                         ps.setDate(1, Date.valueOf(diaIterado));
-                        ps.setInt(2,idhospital);
+                        ps.setString(2,direccion);
                         ps.setInt(3,idmedico);
                         ps.setTime(4,irs.getTime("horadesde"));
                         ps.setTime(5,irs.getTime("horahasta"));
@@ -255,7 +258,7 @@ public class DAOPedirTurno extends DAOconecction{
                         // Lógica para cada día en el intervalo
                         this.ps = connection.prepareStatement(getTurnosOcupados);
                         ps.setDate(1, Date.valueOf(diaIterado));
-                        ps.setInt(2,idhospital);
+                        ps.setString(2,direccion);
                         ps.setInt(3,idmedico);
                         ps.setTime(4,irs.getTime("horadesde"));
                         ps.setTime(5,irs.getTime("horahasta"));
@@ -297,7 +300,8 @@ public class DAOPedirTurno extends DAOconecction{
         String getHoraTurno =   "SELECT *\n" +
                                 "FROM turnos t\n" +
                                 "WHERE t.fecha = ?\n" +
-                                "  AND t.hora = ?;";
+                                "  AND t.hora = ?" +
+                                "  and t.estado > 0;";
 
         // variables a usar
         int idmedico = 0;
@@ -360,6 +364,112 @@ public class DAOPedirTurno extends DAOconecction{
 
             return turnos;
 
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public void setTurno(int dniMedico,int dniPaciente , String direccion, LocalDate fecha, LocalTime hora,int consultorio){
+        // consolidemos datos
+
+
+
+        // querys
+
+        String getIdMedico = "SELECT * FROM MEDICO m where m.dni = ?";
+        String getIdHospital = "SELECT * FROM Hospital h where h.direccion like ?;";
+        String getIdPaciente = "SELECT * FROM PACIENTE where dni = ?;";
+        String verifyTurno = "SELECT * FROM TURNOS \n" +
+                "where medico = ? and paciente = ? and hospital = ? and fecha = ? and hora = ? and consultorio = ? and estado > 0;";
+        String dobleHoraTurno = "SELECT * FROM TURNOS \n" +
+                "where paciente = ? and hora = ? and estado > 0;";
+        String insertTurno = "INSERT INTO TURNOS (MEDICO, PACIENTE, HOSPITAL, FECHA, HORA, CONSULTORIO,estado)\n" +
+                "VALUES (?, ?, ?, ?, ?, ?,1);";
+
+        // variables a usar
+        int idmedico = 0;
+        int idhospital = 0;
+        int idpaciente = 0;
+
+        try {
+            // busquemos el id de medico
+            this.ps = connection.prepareStatement(getIdMedico);
+            ps.setInt(1,dniMedico);
+            ResultSet mrs = ps.executeQuery();
+            if (mrs.next()){
+                idmedico = mrs.getInt("id");
+            }else{
+                throw new Exception("No se encontro medico con ese dni");
+            }
+
+            // busquemos el id de hospital
+            this.ps = connection.prepareStatement(getIdHospital);
+            ps.setString(1,direccion);
+            ResultSet hrs = ps.executeQuery();
+            if (hrs.next()){
+                idhospital = hrs.getInt("id");
+            }else {
+                throw new Exception("No se encontro hospital con esa direccion");
+            }
+
+            // busquemos el id de paciente
+            this.ps = connection.prepareStatement(getIdPaciente);
+            ps.setInt(1,dniPaciente);
+            ResultSet prs = ps.executeQuery();
+            if (prs.next()){
+                idpaciente = prs.getInt("id");
+            }else{
+                throw new Exception("No se encontro medico con ese dni");
+            }
+
+            // verificamos que no este ese turno tomado
+
+            this.ps = connection.prepareStatement(verifyTurno);
+            ps.setInt(1,idmedico);
+            ps.setInt(2,idpaciente);
+            ps.setString(3,direccion);
+            ps.setDate(4, Date.valueOf(fecha));
+            ps.setTime(5, Time.valueOf(hora));
+            ps.setInt(6,consultorio);
+            ResultSet ttrs = ps.executeQuery();
+            if (ttrs.next()){
+                // esta tomado el turno
+            }else {
+                // no esta tomado y continuamos
+
+                // verificamos si ese usuario no tiene un turno a esa hora ya tomado
+                this.ps = connection.prepareStatement(dobleHoraTurno);
+                ps.setInt(1,idpaciente);
+                ps.setTime(2, Time.valueOf(hora));
+                ResultSet dhtrs = ps.executeQuery();
+                if (dhtrs.next()){
+                    // ya tiene ese horario tomado
+                    throw new Exception("Ya tienes un turno con ese horario"+
+                            "muestra el turno...");
+                }else {
+                    // no tiene turno a ese horario prosiga ..
+
+                    this.ps = connection.prepareStatement(insertTurno);
+                    ps.setInt(1,idmedico);
+                    ps.setInt(2,idpaciente);
+                    ps.setString(3,direccion);
+                    ps.setDate(4, Date.valueOf(fecha));
+                    ps.setTime(5, Time.valueOf(hora));
+                    ps.setInt(6, consultorio);
+
+                    int rowsAffected = ps.executeUpdate();
+                    if (rowsAffected == 1) {
+                        System.out.println("El turno se insertó correctamente.");
+                    } else {
+                        throw new Exception("Hubo un problema al insertar el turno.");
+                    }
+
+                }
+
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } catch (Exception e) {

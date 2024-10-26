@@ -1,0 +1,56 @@
+DAOPedirTurno dpt = new DAOPedirTurno();
+
+        //mostrar prestaciones
+        for(Medico m :dpt.getMedicos()){
+            System.out.println(m.getPrestacion());
+        }
+
+        List<Hospital> hospitales = dpt.getHospitalesFecha(123456789).get(0);
+        List<LocalDate> fechas = dpt.getHospitalesFecha(123456789).get(1);
+        for(Hospital h : hospitales){
+            System.out.println(h);
+        }
+        for (LocalDate f : fechas){
+            System.out.println(f);
+        }
+
+        List<LocalDate> dias = dpt.getDias(123456789,hospitales.get(0).getDireccion(),fechas.get(0));
+        System.out.println("Dias disponibles--");
+        for (LocalDate dia : dias){
+            System.out.println(dia);
+        }
+
+        List<List> turnos = dpt.getHorario(123456789,hospitales.get(0).getDireccion(),dias.get(0));
+        System.out.println("imprimiendo horarios disponibles -- ");
+        for(List turno : turnos){
+            System.out.println("--");
+            for(Object dato : turno){
+                System.out.println(dato);
+            }
+        }
+
+        System.out.println("\n\n\tturno a agregar: ");
+
+        LocalDate fechaTurno = LocalDate.parse((String) turnos.get(0).get(0));
+        LocalTime horaTurno = LocalTime.parse((String) turnos.get(0).get(1));
+        String direccion = (String) turnos.get(0).get(2);
+        int dniMedico = Integer.parseInt((String) turnos.get(0).get(3));
+        int consultorio = Integer.parseInt((String) turnos.get(0).get(4));
+
+// Imprimir para verificar
+        System.out.println(fechaTurno);
+        System.out.println(horaTurno);
+        System.out.println(dniMedico);
+        System.out.println(direccion);
+        System.out.println(consultorio);
+
+
+        dpt.setTurno(dniMedico, 123333789, direccion, fechaTurno, horaTurno, consultorio);
+
+-----
+
+DAOVerTurno verturno =  new DAOVerTurno();
+        List<Turno> turnosTom = verturno.verTurno(123456789,2);
+        for (Turno t : turnosTom){
+            System.out.println(t);
+        }

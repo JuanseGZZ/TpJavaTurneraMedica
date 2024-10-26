@@ -35,4 +35,8 @@ public class Paciente{
         this.dni = dni;
     }
 
+    @Override
+    public String toString() {
+        return nombre + " " + apellido + " DNI: " + dni ;
+    }
 }

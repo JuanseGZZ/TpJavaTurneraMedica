@@ -84,15 +84,8 @@ public class Medico{
 
     @Override
     public String toString() {
-        return "Medico{" +
-                "tipo=" + tipo +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", nombre='" + nombre + '\'' +
-                ", apellido='" + apellido + '\'' +
-                ", prestacion='" + prestacion + '\'' +
-                ", dni=" + dni +
-                '}';
+        return
+                nombre + " " + apellido + " " + prestacion + " " + " DNI: " + dni ;
     }
 
 
