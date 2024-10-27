@@ -1,10 +1,13 @@
 package Entidades;
 
+import Entidades.Interfaces.MedicoFunciones;
 import Services.DAOPedirTurno;
+import Services.DAOVerTurno;
 
+import java.time.LocalDate;
 import java.util.List;
 
-public class Medico{
+public class Medico implements MedicoFunciones {
     private int tipo;
     private String username;
     private String password;
@@ -89,4 +92,19 @@ public class Medico{
     }
 
 
+    @Override
+    public List<Turno> verTurnos(LocalDate desde, LocalDate hasta) {
+        DAOVerTurno db = new DAOVerTurno();
+        if (desde == null && hasta==null){
+            return db.verTurno(this.dni,0);
+        } else {
+            return db.verTurno(this.dni,0,desde,hasta);// ojo que alguno puede ser null y no lo contemple en la db
+        }
+    }
+
+    @Override
+    public double verGanancias(LocalDate desde, LocalDate hasta) {
+
+        return 0;
+    }
 }
