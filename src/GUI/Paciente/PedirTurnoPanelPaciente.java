@@ -11,10 +11,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.*;
 import java.util.List;
-import java.util.Set;
 
 public class PedirTurnoPanelPaciente extends JPanel {
 
@@ -149,7 +147,7 @@ public class PedirTurnoPanelPaciente extends JPanel {
                                 && medicoSeleccionado != null && !medicoSeleccionado.equals("Seleccione Medico")
                                 && lugarSeleccionado != null && !lugarSeleccionado.equals("Seleccione Lugar")
                 ){
-                    //cargarHorario(diaSeleccionado,mesSeleccionado,medicoSeleccionado,lugarSeleccionado);
+                    cargarHorario(diaSeleccionado,mesSeleccionado,medicoSeleccionado,lugarSeleccionado);
                 }
             }
         });
@@ -201,7 +199,7 @@ public class PedirTurnoPanelPaciente extends JPanel {
         List<Medico> medicos = pd.getMedicos();
 
         medicoCombo.removeAllItems();
-
+        medicoCombo.addItem("Seleccione Medico");
         lugarCombo.removeAllItems();
         lugarCombo.addItem("Seleccione Lugar");
         mesCombo.removeAllItems();
@@ -225,7 +223,7 @@ public class PedirTurnoPanelPaciente extends JPanel {
         Set<String> hospitales = new HashSet<>();
 
         lugarCombo.removeAllItems();
-
+        lugarCombo.addItem("Seleccione Lugar");
         mesCombo.removeAllItems();
         mesCombo.addItem("Seleccione Mes");
         diaCombo.removeAllItems();
@@ -272,7 +270,7 @@ public class PedirTurnoPanelPaciente extends JPanel {
         Set<String> meses = new HashSet<>();
 
         mesCombo.removeAllItems();
-
+        mesCombo.addItem("Seleccione Mes");
         diaCombo.removeAllItems();
         diaCombo.addItem("Seleccione Dia");
         horarioCombo.removeAllItems();
@@ -307,9 +305,120 @@ public class PedirTurnoPanelPaciente extends JPanel {
 
     }
 
-    private void cargarDias(String medicoSeleccionado,String lugarSeleccionado,String mesSeleccionado){
+    private void cargarDias(String medicoSeleccionado, String lugarSeleccionado, String mesSeleccionado) {
+        DAOPedirTurno pt = new DAOPedirTurno();
+        List<Medico> medicos = pt.getMedicos();
+        int dni = 0;
+        List<LocalDate> dias = new ArrayList<>();
+        Set<String> diasSet = new TreeSet<>();
+
+        if (!medicos.isEmpty()) {
+            for (Medico m : medicos) {
+                if ((m.getNombre() + " " + m.getApellido()).equals(medicoSeleccionado)) {
+                    dni = m.getDni();
+                }
+            }
+            if (dni != 0) {
+                List<Hospital> hospitales = (List<Hospital>) pt.getHospitalesFecha(dni).get(0);
+                List<LocalDate> fechas = (List<LocalDate>) pt.getHospitalesFecha(dni).get(1);
+                if (!hospitales.isEmpty() && !fechas.isEmpty()) {
+                    for (Hospital hospital : hospitales) {
+                        if (hospital.getNombre().equals(lugarSeleccionado)) {
+                            for (LocalDate fecha : fechas) {
+                                // Parseamos mesSeleccionado a LocalDate para compararlo con la fecha
+                                LocalDate mesSeleccionadoDate = LocalDate.parse(mesSeleccionado);
+
+                                if (fecha.equals(mesSeleccionadoDate)) {
+                                    //System.out.println("entra");
+                                    dias = pt.getDias(dni, hospital.getDireccion(), fecha);
+                                } else {
+                                    //System.out.println("Fecha no es igual");
+                                }
+                            }
+                        } else {
+                            System.out.println("Lugar no es igual");
+                        }
+                    }
+                }
+            }
+        }
+
+        diaCombo.removeAllItems();
+        diaCombo.addItem("Seleccione Dia");
+        horarioCombo.removeAllItems();
+        horarioCombo.addItem("Seleccione Horario");
+
+        if (!dias.isEmpty()) {
+            //System.out.println("entra");
+            for (LocalDate dia : dias) {
+                //System.out.println(dia.toString());
+                diasSet.add(dia.toString());
+            }
+            for (String diaa : diasSet) {
+                //System.out.println(diaa);
+                diaCombo.addItem(diaa);
+            }
+        }
 
     }
+
+    private void cargarHorario(String diaSeleccionado,String mesSeleccionado,String medicoSeleccionado,String lugarSeleccionado){
+        DAOPedirTurno pt = new DAOPedirTurno();
+        List<Medico> medicos = pt.getMedicos();
+        int dni = 0;
+        List<LocalDate> dias = new ArrayList<>();
+        List<List> turnosDisponibles = new ArrayList<>();
+
+        if (!medicos.isEmpty()) {
+            for (Medico m : medicos) {
+                if ((m.getNombre() + " " + m.getApellido()).equals(medicoSeleccionado)) {
+                    dni = m.getDni();
+                }
+            }
+            if (dni != 0) {
+                List<Hospital> hospitales = (List<Hospital>) pt.getHospitalesFecha(dni).get(0);
+                List<LocalDate> fechas = (List<LocalDate>) pt.getHospitalesFecha(dni).get(1);
+                if (!hospitales.isEmpty() && !fechas.isEmpty()) {
+                    for (Hospital hospital : hospitales) {
+                        if (hospital.getNombre().equals(lugarSeleccionado)) {
+                            for (LocalDate fecha : fechas) {
+                                // Parseamos mesSeleccionado a LocalDate para compararlo con la fecha
+                                LocalDate mesSeleccionadoDate = LocalDate.parse(mesSeleccionado);
+
+                                if (fecha.equals(mesSeleccionadoDate)) {
+                                    //System.out.println("entra");
+                                    dias = pt.getDias(dni, hospital.getDireccion(), fecha);
+                                    if(!dias.isEmpty()){
+                                        for (LocalDate dia : dias){
+                                            if(dia.toString().equals(diaSeleccionado)){
+                                                turnosDisponibles = pt.getHorario(dni,hospital.getDireccion(), LocalDate.parse(diaSeleccionado));
+                                            }
+                                        }
+                                    }else {
+                                        //el dia no es igual
+                                    }
+                                } else {
+                                    //System.out.println("Fecha no es igual");
+                                }
+                            }
+                        } else {
+                            System.out.println("Lugar no es igual");
+                        }
+                    }
+                }
+            }
+        }
+
+        horarioCombo.removeAllItems();
+        horarioCombo.addItem("Seleccione Horario");
+
+        for (List<String> turno : turnosDisponibles){
+            //System.out.println(turno);
+            horarioCombo.addItem(turno.get(1));
+        }
+
+    }
+
 
     // tengo que chequear de eliminar lo de abajo si cambio algo arriba
 }
