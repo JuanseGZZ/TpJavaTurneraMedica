@@ -383,7 +383,7 @@ public class DAOPedirTurno extends DAOconecction implements DAOIPedirTurno {
         String verifyTurno = "SELECT * FROM TURNOS \n" +
                 "where medico = ? and paciente = ? and hospital = ? and fecha = ? and hora = ? and consultorio = ? and estado > 0;";
         String dobleHoraTurno = "SELECT * FROM TURNOS \n" +
-                "where paciente = ? and hora = ? and estado > 0;";
+                "where paciente = ? and hora = ? and estado > 0 and fecha = ?;";
         String insertTurno = "INSERT INTO TURNOS (MEDICO, PACIENTE, HOSPITAL, FECHA, HORA, CONSULTORIO,estado)\n" +
                 "VALUES (?, ?, ?, ?, ?, ?,1);";
 
@@ -438,10 +438,11 @@ public class DAOPedirTurno extends DAOconecction implements DAOIPedirTurno {
             }else {
                 // no esta tomado y continuamos
 
-                // verificamos si ese usuario no tiene un turno a esa hora ya tomado
+                // verificamos si ese usuario no tiene un turno a esa hora ya tomado y en el mismo dia
                 this.ps = connection.prepareStatement(dobleHoraTurno);
                 ps.setInt(1,idpaciente);
                 ps.setTime(2, Time.valueOf(hora));
+                ps.setDate(3, Date.valueOf(fecha));
                 ResultSet dhtrs = ps.executeQuery();
                 if (dhtrs.next()){
                     // ya tiene ese horario tomado
