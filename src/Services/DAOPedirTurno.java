@@ -28,8 +28,6 @@ public class DAOPedirTurno extends DAOconecction implements DAOIPedirTurno {
                 m.setApellido(rsp.getString("apellido"));
                 m.setTipo(rsp.getInt("tipo"));
                 m.setPrestacion(rsp.getString("prestacion"));
-                m.setUsername(rsp.getString("username"));
-                m.setPassword(rsp.getString("password"));
                 medicos.add(m);
             }
             return medicos;
@@ -74,7 +72,7 @@ public class DAOPedirTurno extends DAOconecction implements DAOIPedirTurno {
             }else {
                 throw new Exception("No se encontro medico con ese DNI");
             }
-            System.out.println(idmedico);
+            //System.out.println(idmedico);
 
             // recolectamos todos los intervalos de disponibilidad a iterar
             this.ps = connection.prepareStatement(getDisponibilidad);
@@ -82,7 +80,7 @@ public class DAOPedirTurno extends DAOconecction implements DAOIPedirTurno {
             ResultSet rss = ps.executeQuery();
 
             while (rss.next()){ // recorremos todos los intervalos
-                System.out.println("entro");
+                //System.out.println("entro");
                 // si el intervalo esta en el mismo mes en el que estamos iteramos la diferencia de dias hasta que termine
                 if(LocalDate.now().getMonthValue() == rss.getDate("hasta").toLocalDate().getMonthValue()){
 

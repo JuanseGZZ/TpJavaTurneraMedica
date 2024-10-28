@@ -77,7 +77,7 @@ public class Medico implements MedicoFunciones {
     }
 
 
-    public List<Medico> getMedicos(){
+    public static List<Medico> getMedicos(){
         DAOPedirTurno daoPedirTurno = new DAOPedirTurno();
 
         for (Medico m : daoPedirTurno.getMedicos()){
@@ -113,4 +113,5 @@ public class Medico implements MedicoFunciones {
         DAOMedico md = new DAOMedico();
         return md.getId(dni);
     }
+
 }
