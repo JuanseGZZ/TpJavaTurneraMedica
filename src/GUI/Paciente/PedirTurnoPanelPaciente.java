@@ -2,6 +2,8 @@ package GUI.Paciente;
 
 import Entidades.Hospital;
 import Entidades.Medico;
+import Entidades.Paciente;
+import GUI.LoginPanel;
 import GUI.PanelManager;
 import Services.DAOPedirTurno;
 
@@ -11,11 +13,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.List;
 
 public class PedirTurnoPanelPaciente extends JPanel {
-
+    private static List<List> turnos;
     private PanelManager panelManager;
     private JComboBox<String> especialidadCombo;
     private JComboBox<String> prestacionCombo;
@@ -35,6 +38,7 @@ public class PedirTurnoPanelPaciente extends JPanel {
 
     public PedirTurnoPanelPaciente(PanelManager panelManager) {
         this.panelManager = panelManager;
+
 
 
         this.setLayout(new BorderLayout());
@@ -175,6 +179,36 @@ public class PedirTurnoPanelPaciente extends JPanel {
         btnReservar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String diaSeleccionado = (String) diaCombo.getSelectedItem();
+                String mesSeleccionado = (String) mesCombo.getSelectedItem();
+                String medicoSeleccionado = (String) medicoCombo.getSelectedItem();
+                String lugarSeleccionado = (String) lugarCombo.getSelectedItem();
+                String horarioSeleccionado = (String) horarioCombo.getSelectedItem();
+                if (diaSeleccionado!=null && !diaSeleccionado.equals("Seleccione Dia")
+                        && mesSeleccionado != null && !mesSeleccionado.equals("Seleccione Mes")
+                        && medicoSeleccionado != null && !medicoSeleccionado.equals("Seleccione Medico")
+                        && lugarSeleccionado != null && !lugarSeleccionado.equals("Seleccione Lugar")
+                        && horarioSeleccionado != null && !horarioSeleccionado.equals("Seleccione Horario")
+                ){
+                    for(List<String> turno : turnos){
+                        if (turno.get(1).equals(horarioSeleccionado)){
+
+                            System.out.println("Valos a registrar este turno:");
+                            System.out.println(turno);
+
+                            DAOPedirTurno pt = new DAOPedirTurno();
+                            pt.setTurno(
+                                    Integer.parseInt(turno.get(3)),
+                                    Integer.parseInt( LoginPanel.getLoged().get(3) ),
+                                    turno.get(2),
+                                    LocalDate.parse(turno.get(0)),
+                                    LocalTime.parse(turno.get(1)),
+                                    Integer.parseInt(turno.get(4)))
+                            ;
+
+                        }
+                    }
+                }
 
             }
         });
@@ -413,9 +447,12 @@ public class PedirTurnoPanelPaciente extends JPanel {
         horarioCombo.addItem("Seleccione Horario");
 
         for (List<String> turno : turnosDisponibles){
+
             //System.out.println(turno);
             horarioCombo.addItem(turno.get(1));
         }
+
+        PedirTurnoPanelPaciente.turnos = turnosDisponibles;
 
     }
 
