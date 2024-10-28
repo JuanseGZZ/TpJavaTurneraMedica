@@ -14,6 +14,7 @@ public class LoginPanel extends JPanel {
     private JTextField userField;
     private JPasswordField passwordField; // Usamos JPasswordField para ocultar la contraseña
     private PanelManager panelManager;
+    private static List<String> loged;
 
     public LoginPanel(PanelManager panelManager) {
         this.panelManager = panelManager;
@@ -76,11 +77,14 @@ public class LoginPanel extends JPanel {
                     }else {
                         if (rsp.get(0).equals("0")){
                             // poner el panel de paciente
-                            panelManager.showPanel("pacienteMenu");
+                            panelManager.showPanel("pacientePanelMenu");
+                            LoginPanel.setLoged(rsp);
                         } else if (rsp.get(0).equals("2")) {
                             // poner el panel de admin
+                            LoginPanel.setLoged(rsp);
                         } else if (rsp.get(0).equals("3")) {
                             // poner el panel de medico
+                            LoginPanel.setLoged(rsp);
                         }else {
                             for (String data : rsp){
                                 System.out.println(data);
@@ -95,5 +99,13 @@ public class LoginPanel extends JPanel {
         });
 
 
+    }
+
+    public static List<String> getLoged() {
+        return loged;
+    }
+
+    public static void setLoged(List<String> loged) {
+        LoginPanel.loged = loged;
     }
 }

@@ -2,7 +2,9 @@ package GUI;
 
 
 
-import GUI.Paciente.PacienteMenu;
+import GUI.Paciente.MenuPaciente;
+import GUI.Paciente.MisTurnosPaciente;
+import GUI.Paciente.PedirTurnoPanelPaciente;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,8 +34,11 @@ public class PanelManager {
         // Paneles asosiados
         mainPanel.add(new LoginPanel(this), "loginPanel");
 
-        // Paneles Paciente
-        mainPanel.add(new PacienteMenu(this),"pacienteMenu");
+        // Paneles de Paciente
+        mainPanel.add(new MenuPaciente(this), "pacientePanelMenu");
+        mainPanel.add(new PedirTurnoPanelPaciente(this), "turnoPanel");
+        mainPanel.add(new MisTurnosPaciente(this),"MisTurnosPanel");
+
 
 
 

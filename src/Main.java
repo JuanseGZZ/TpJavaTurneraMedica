@@ -1,13 +1,4 @@
-import Entidades.Hospital;
-import Entidades.Medico;
-import Entidades.Turno;
 import GUI.PanelManager;
-import Services.DAOPedirTurno;
-import Services.DAOVerTurno;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
 
 public class Main {// Es el Front llamar a la Entidad y la entidad al DAOIMP o sea el Service
     public static void main(String[] args) {

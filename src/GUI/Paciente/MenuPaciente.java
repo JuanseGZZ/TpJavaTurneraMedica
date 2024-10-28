@@ -7,12 +7,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class PacienteMenu extends JPanel {
+public class MenuPaciente extends JPanel {
 
     private JButton btnPedirTurno, btnMisTurnos, btnLogout;
     private PanelManager panelManager;
 
-    public PacienteMenu(PanelManager panelManager) {
+    public MenuPaciente(PanelManager panelManager) {
         this.panelManager = panelManager;
         setLayout(new BorderLayout());
 

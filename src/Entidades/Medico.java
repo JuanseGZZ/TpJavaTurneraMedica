@@ -1,6 +1,7 @@
 package Entidades;
 
 import Entidades.Interfaces.MedicoFunciones;
+import Services.DAOMedico;
 import Services.DAOPedirTurno;
 import Services.DAOVerTurno;
 
@@ -106,5 +107,10 @@ public class Medico implements MedicoFunciones {
     public double verGanancias(LocalDate desde, LocalDate hasta) {
 
         return 0;
+    }
+
+    public static int getId(int dni){
+        DAOMedico md = new DAOMedico();
+        return md.getId(dni);
     }
 }

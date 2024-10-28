@@ -2,6 +2,8 @@ package Entidades;
 
 import DAO.DAOIPedirTurno;
 import Entidades.Interfaces.PacienteFunciones;
+import Services.DAOBajarTurno;
+import Services.DAOPaciente;
 import Services.DAOPedirTurno;
 import Services.DAOVerTurno;
 
@@ -88,4 +90,12 @@ public class Paciente implements DAOIPedirTurno, PacienteFunciones {
             return db.verTurno(dni,0,desde,hasta);// ojo que alguno puede ser null y no lo contemple en la db
         }
     }
+
+
+    public static int getIdPaciente(int dni) {
+        DAOPaciente p = new DAOPaciente();
+        return p.getId(dni);
+    }
+
+
 }

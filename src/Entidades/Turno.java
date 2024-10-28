@@ -1,5 +1,8 @@
 package Entidades;
 
+import DAO.DAOIBajarTurno;
+import Services.DAOBajarTurno;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -87,5 +90,16 @@ public class Turno {
                 "consultorio: " + consultorio + "\n"+
                 "Estado: " + est +"\n"+
                 '}' +"\n";
+    }
+
+    public static void bajarTurno(Turno t){
+        DAOIBajarTurno bt = new DAOBajarTurno();
+        int pid = Paciente.getIdPaciente(t.paciente.getDni());
+        int mid = Medico.getId(t.medico.getDni());
+        String lugar = t.lugar;
+        LocalDate fecha = t.fecha;
+        LocalTime time = t.Hora;
+        int consul = t.consultorio;
+        bt.darBaja(mid,pid,lugar,fecha,time,consul);
     }
 }

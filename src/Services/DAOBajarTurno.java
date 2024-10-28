@@ -11,8 +11,6 @@ import java.time.LocalTime;
 
 public class DAOBajarTurno extends DAOconecction implements DAOIBajarTurno {
 
-    // a la hora de mostrar voy a ponerlos en una coleccio en orden y voy a mostrar el orden y el idex que pikee lo voy a traer a elminar
-
     @Override
     public void darBaja(int medico, int paciente, String lugar, LocalDate fecha, LocalTime hora, int consultorio) {
         String getTurno = "SELECT t.id \n" +
