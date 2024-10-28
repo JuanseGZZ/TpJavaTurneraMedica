@@ -205,6 +205,17 @@ public class PedirTurnoPanelPaciente extends JPanel {
                                     LocalTime.parse(turno.get(1)),
                                     Integer.parseInt(turno.get(4)))
                             ;
+                            PedirTurnoPanelPaciente.turnos = null;
+                            medicoCombo.removeAllItems();
+                            medicoCombo.addItem("Seleccione Medico");
+                            lugarCombo.removeAllItems();
+                            lugarCombo.addItem("Seleccione Lugar");
+                            mesCombo.removeAllItems();
+                            mesCombo.addItem("Seleccione Mes");
+                            diaCombo.removeAllItems();
+                            diaCombo.addItem("Seleccione Dia");
+                            horarioCombo.removeAllItems();
+                            horarioCombo.addItem("Seleccione Horario");
 
                         }
                     }
