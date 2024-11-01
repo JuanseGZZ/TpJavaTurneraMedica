@@ -61,7 +61,7 @@ public class DAOMedico extends DAOconecction implements DAOIMedico {
                             "FROM TURNOS t\n" +
                             "JOIN MEDICO m ON (t.medico = m.id)\n" +
                             "JOIN PACIENTE p ON (t.paciente = p.id)\n" +
-                            "WHERE p.id = ? and t.estado > 0" +
+                            "WHERE p.id = ? and t.estado = 2" +
                             "AND t.fecha BETWEEN ? AND ?;";
                 }else{
                     throw new Exception("No se encontro paciente con ese dni");

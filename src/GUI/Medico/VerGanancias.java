@@ -95,7 +95,7 @@ public class VerGanancias extends JPanel{
             public void actionPerformed(ActionEvent e) {
                 try {
                     Medico medico = new Medico();
-                    turnos = medico.verTurnos(desde.getText(),hasta.getText());
+                    turnos = medico.verGanancias(desde.getText(),hasta.getText());
 
                     center.setRowCount(0);
 

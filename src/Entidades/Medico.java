@@ -147,7 +147,7 @@ public class Medico implements MedicoFunciones {
                 fechaHasta
         );
 
-        return List.of();
+        return turnos;
     }
 
     public static int getId(int dni){
