@@ -2,6 +2,7 @@ package Entidades;
 
 import DAO.DAOIPedirTurno;
 import Entidades.Interfaces.PacienteFunciones;
+import GUI.LoginPanel;
 import Services.DAOBajarTurno;
 import Services.DAOPaciente;
 import Services.DAOPedirTurno;
@@ -70,9 +71,9 @@ public class Paciente implements DAOIPedirTurno, PacienteFunciones {
     }
 
     @Override
-    public List<List> getHorario(int dni, String direccion, LocalDate dia) {
+    public List<List> getHorario(int dni, String direccion, LocalDate dia,int dniPaciente) {
         DAOPedirTurno db = new DAOPedirTurno();
-        return db.getHorario(dni,direccion,dia);
+        return db.getHorario(dni,direccion,dia,dniPaciente);
     }
 
     @Override

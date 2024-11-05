@@ -155,4 +155,6 @@ public class Medico implements MedicoFunciones {
         return md.getId(dni);
     }
 
+
+
 }

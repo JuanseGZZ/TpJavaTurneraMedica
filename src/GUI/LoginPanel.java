@@ -77,14 +77,17 @@ public class LoginPanel extends JPanel {
                     }else {
                         if (rsp.get(0).equals("0")){
                             // poner el panel de paciente
+                            System.out.println("paciente logueado");
                             panelManager.showPanel("pacientePanelMenu");
                             LoginPanel.setLoged(rsp);
                         } else if (rsp.get(0).equals("1")) {
                             // poner el panel de admin
+                            System.out.println("admin logeado");
+                            panelManager.showPanel("menuAdmin");
                             LoginPanel.setLoged(rsp);
                         } else if (rsp.get(0).equals("2")) {
                             // poner el panel de medico
-                            System.out.println("entro");
+                            System.out.println("medico logeado");
                             panelManager.showPanel("medicoPanelMenu");
                             LoginPanel.setLoged(rsp);
                         }else {

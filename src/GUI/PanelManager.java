@@ -2,6 +2,9 @@ package GUI;
 
 
 
+import GUI.Admin.MenuAdmin;
+import GUI.Admin.PerdirTurnoAdmin;
+import GUI.Admin.VerGananciasMedicos;
 import GUI.Medico.MenuMedico;
 import GUI.Medico.MisTurnosMedico;
 import GUI.Medico.VerGanancias;
@@ -41,10 +44,16 @@ public class PanelManager {
         mainPanel.add(new MenuPaciente(this), "pacientePanelMenu");
         mainPanel.add(new PedirTurnoPanelPaciente(this), "turnoPanel");
         mainPanel.add(new MisTurnosPaciente(this),"MisTurnosPanel");
+
+        // paneles de medico
         mainPanel.add(new MenuMedico(this),"medicoPanelMenu");
         mainPanel.add(new MisTurnosMedico(this),"turnoPanelMedico");
         mainPanel.add(new VerGanancias(this),"verGanancias");
 
+        // paneles de admin
+        mainPanel.add(new MenuAdmin(this),"menuAdmin");
+        mainPanel.add(new PerdirTurnoAdmin(this),"pedirTurnoAdmin");
+        mainPanel.add(new VerGananciasMedicos(this),"verGananciasMedicos");
 
 
 

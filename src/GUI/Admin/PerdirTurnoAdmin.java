@@ -1,13 +1,11 @@
-package GUI.Paciente;
+package GUI.Admin;
 
 import Entidades.Hospital;
 import Entidades.Medico;
-import Entidades.Paciente;
 import Entidades.Turno;
 import GUI.LoginPanel;
 import GUI.PanelManager;
 import Services.DAOPedirTurno;
-
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,10 +13,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-public class PedirTurnoPanelPaciente extends JPanel {
+public class PerdirTurnoAdmin extends JPanel{
     private static List<List> turnos;
     private PanelManager panelManager;
     private JComboBox<String> especialidadCombo;
@@ -37,7 +36,7 @@ public class PedirTurnoPanelPaciente extends JPanel {
 
 
 
-    public PedirTurnoPanelPaciente(PanelManager panelManager) {
+    public PerdirTurnoAdmin(PanelManager panelManager) {
         this.panelManager = panelManager;
 
 
@@ -88,7 +87,7 @@ public class PedirTurnoPanelPaciente extends JPanel {
         this.add(bot,BorderLayout.SOUTH);
 
         // Llenar especialidades desde la base de datos
-         cargarPrestaciones(Medico.getMedicos());
+        cargarPrestaciones(Medico.getMedicos());
 
         // Evento para cargar médicos cuando se seleccione una prestación
         prestacionCombo.addActionListener(new ActionListener() {
@@ -130,8 +129,8 @@ public class PedirTurnoPanelPaciente extends JPanel {
                 String lugarSeleccionado = (String) lugarCombo.getSelectedItem();
                 if (
                         mesSeleccionado != null && !mesSeleccionado.equals("Seleccione Mes")
-                        && medicoSeleccionado != null && !medicoSeleccionado.equals("Seleccione Medico")
-                        && lugarSeleccionado != null && !lugarSeleccionado.equals("Seleccione Lugar")
+                                && medicoSeleccionado != null && !medicoSeleccionado.equals("Seleccione Medico")
+                                && lugarSeleccionado != null && !lugarSeleccionado.equals("Seleccione Lugar")
                 ){
                     cargarDias(medicoSeleccionado,lugarSeleccionado,mesSeleccionado);
                 }
@@ -147,7 +146,7 @@ public class PedirTurnoPanelPaciente extends JPanel {
                 String lugarSeleccionado = (String) lugarCombo.getSelectedItem();
                 if(
                         diaSeleccionado!=null && !diaSeleccionado.equals("Seleccione Dia")
-                        && mesSeleccionado != null && !mesSeleccionado.equals("Seleccione Mes")
+                                && mesSeleccionado != null && !mesSeleccionado.equals("Seleccione Mes")
                                 && medicoSeleccionado != null && !medicoSeleccionado.equals("Seleccione Medico")
                                 && lugarSeleccionado != null && !lugarSeleccionado.equals("Seleccione Lugar")
                 ){
@@ -171,7 +170,7 @@ public class PedirTurnoPanelPaciente extends JPanel {
         btnVolver.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                panelManager.showPanel("pacientePanelMenu");
+                panelManager.showPanel("menuAdmin");
             }
         });
 
@@ -196,15 +195,15 @@ public class PedirTurnoPanelPaciente extends JPanel {
                             System.out.println("Vamos a registrar este turno:");
                             System.out.println(turno);
 
-                            Turno.subirTurno(
-                                    Integer.parseInt(turno.get(3)),
-                                    Integer.parseInt( LoginPanel.getLoged().get(3) ), // dni de la persona logeada
-                                    turno.get(2),
-                                    LocalDate.parse(turno.get(0)),
-                                    LocalTime.parse(turno.get(1)),
-                                    Integer.parseInt(turno.get(4)));
+                            //Turno.subirTurno(
+                            //        Integer.parseInt(turno.get(3)),
+                            //        Integer.parseInt( LoginPanel.getLoged().get(3) ), // dni de la persona logeada
+                            //        turno.get(2),
+                            //        LocalDate.parse(turno.get(0)),
+                            //        LocalTime.parse(turno.get(1)),
+                            //        Integer.parseInt(turno.get(4)));
 
-                            PedirTurnoPanelPaciente.turnos = null;
+                            PerdirTurnoAdmin.turnos = null;
                             medicoCombo.removeAllItems();
                             medicoCombo.addItem("Seleccione Medico");
                             lugarCombo.removeAllItems();
@@ -324,18 +323,18 @@ public class PedirTurnoPanelPaciente extends JPanel {
     }
 
     private void cargarHorario(String diaSeleccionado,String mesSeleccionado,String medicoSeleccionado,String lugarSeleccionado){
-        List<List> turnosDisponibles = Hospital.getTurnos(diaSeleccionado,mesSeleccionado,medicoSeleccionado,lugarSeleccionado, Integer.parseInt(LoginPanel.getLoged().get(3)));
+        //List<List> turnosDisponibles = Hospital.getTurnos(diaSeleccionado,mesSeleccionado,medicoSeleccionado,lugarSeleccionado);
 
-        horarioCombo.removeAllItems();
-        horarioCombo.addItem("Seleccione Horario");
+        //horarioCombo.removeAllItems();
+        //horarioCombo.addItem("Seleccione Horario");
 
-        for (List<String> turno : turnosDisponibles){
+        //for (List<String> turno : turnosDisponibles){
 
             //System.out.println(turno);
-            horarioCombo.addItem(turno.get(1));
-        }
+            //horarioCombo.addItem(turno.get(1));
+        //}
 
-        PedirTurnoPanelPaciente.turnos = turnosDisponibles;
+        //PerdirTurno.turnos = turnosDisponibles;
 
     }
 

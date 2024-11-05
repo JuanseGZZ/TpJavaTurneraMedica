@@ -283,9 +283,10 @@ public class DAOPedirTurno extends DAOconecction implements DAOIPedirTurno {
 
 
 
-    public List<List> getHorario(int dni, String direccion, LocalDate dia){
+    public List<List> getHorario(int dni, String direccion, LocalDate dia,int dniPaciente){
         String getIdMedico = "SELECT * FROM MEDICO m where m.dni = ?";
         String getIdHospital = "SELECT * FROM Hospital h where h.direccion like ?;";
+        String getIdPaciente = "SELECT * FROM PACIENTE where dni = ?";
 
         String getIntervalo =   "SELECT *, \n" +
                                 "    TIMESTAMPDIFF(MINUTE, d.horaDesde, d.horaHasta) / 30 AS cantidad_turnos\n" +
@@ -295,18 +296,30 @@ public class DAOPedirTurno extends DAOconecction implements DAOIPedirTurno {
                                 "  AND d.desde <= ?\n" +
                                 "  AND d.hasta >= ?;";
 
-        String getHoraTurno =   "SELECT *\n" +
+        String getHoraTurno =   "SELECT *\n" +          // falta agregarle el medico porque sino lo toma para todo y usuario
                                 "FROM turnos t\n" +
                                 "WHERE t.fecha = ?\n" +
                                 "  AND t.hora = ?" +
-                                "  and t.estado > 0;";
+                                "  and t.estado > 0"+
+                                "  and t.medico = ?;";
 
         // variables a usar
         int idmedico = 0;
         int idhospital = 0;
+        int idPaciente = 0;
         List<List> turnos = new ArrayList<>();
 
         try {
+            // buscamos el id de paciente
+            this.ps = connection.prepareStatement(getIdPaciente);
+            ps.setInt(1,dniPaciente);
+            ResultSet prs = ps.executeQuery();
+            if (prs.next()){
+                idPaciente = prs.getInt("id");
+            }else{
+                throw new Exception("No se encontro medico con ese dni");
+            }
+
             // busquemos el id de medico
             this.ps = connection.prepareStatement(getIdMedico);
             ps.setInt(1,dni);
@@ -344,6 +357,7 @@ public class DAOPedirTurno extends DAOconecction implements DAOIPedirTurno {
                             // o sea vamos viendo horario a horario sumandole a la hora desde 30 minutos por turno
                             Time.valueOf( irs.getTime("horadesde").toLocalTime().plusMinutes(30*i) )
                             );
+                    ps.setString(3, String.valueOf(idmedico));
                     ResultSet trs = ps.executeQuery();
                     if (trs.next()){
                         // turno ocupado porque encontro un turno en ese horario

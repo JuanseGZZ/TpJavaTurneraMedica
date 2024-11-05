@@ -1,10 +1,13 @@
 package Entidades;
 
 import DAO.DAOIBajarTurno;
+import GUI.LoginPanel;
 import Services.DAOBajarTurno;
+import Services.DAOPedirTurno;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 public class Turno {
     private Medico medico;
@@ -102,4 +105,10 @@ public class Turno {
         int consul = t.consultorio;
         bt.darBaja(mid,pid,lugar,fecha,time,consul);
     }
+
+    public static void subirTurno(int dniMedico,int dniPaciente , String direccion, LocalDate fecha, LocalTime hora,int consultorio){
+        DAOPedirTurno pt = new DAOPedirTurno();
+        pt.setTurno(dniMedico,dniPaciente,direccion,fecha,hora,consultorio);
+    }
+
 }

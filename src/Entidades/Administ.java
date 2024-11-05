@@ -67,7 +67,7 @@ public class Administ implements DAOIPedirTurno, AdminFunciones {
     }
 
     @Override
-    public List<List> getHorario(int dni, String direccion, LocalDate dia) {
+    public List<List> getHorario(int dni, String direccion, LocalDate dia, int dnipaciente) {
         return List.of();
     }
 
