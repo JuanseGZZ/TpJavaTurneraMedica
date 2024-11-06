@@ -50,15 +50,13 @@ public class Paciente implements PacienteFunciones {
     }
 
 
-
-
     @Override
     public List<Turno> verTurnos(int dni,LocalDate desde, LocalDate hasta) {
         DAOVerTurno db = new DAOVerTurno();
         if (desde == null && hasta==null){
             return db.verTurno(dni,0);
         } else {
-            return db.verTurno(dni,0,desde,hasta);// ojo que alguno puede ser null y no lo contemple en la db
+            return db.verTurno(dni,0,desde,hasta);                                                                                          // ojo que alguno puede ser null y no lo contemple en la db
         }
     }
 
