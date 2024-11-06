@@ -2,6 +2,7 @@ package GUI.Admin;
 
 import Entidades.Hospital;
 import Entidades.Medico;
+import Entidades.Paciente;
 import Entidades.Turno;
 import GUI.LoginPanel;
 import GUI.PanelManager;
@@ -20,7 +21,6 @@ import java.util.Set;
 public class PerdirTurnoAdmin extends JPanel{
     private static List<List> turnos;
     private PanelManager panelManager;
-    private JComboBox<String> especialidadCombo;
     private JComboBox<String> prestacionCombo;
     private JComboBox<String> medicoCombo;
     private JComboBox<String> lugarCombo;
@@ -33,6 +33,9 @@ public class PerdirTurnoAdmin extends JPanel{
     private JPanel top;
     private JPanel cen;
     private JPanel bot;
+    private JLabel dniPacientelb;
+    private JTextArea dniPaciente;
+    private JButton listaPacientes;
 
 
 
@@ -50,6 +53,8 @@ public class PerdirTurnoAdmin extends JPanel{
         top.add(titleLabel);
 
         // Crear componentes
+        dniPacientelb = new JLabel("dni paciente:");
+        dniPaciente = new JTextArea();
         prestacionCombo = new JComboBox<>();
         medicoCombo = new JComboBox<>();
         lugarCombo = new JComboBox<>();
@@ -58,6 +63,7 @@ public class PerdirTurnoAdmin extends JPanel{
         horarioCombo = new JComboBox<>();
         btnVolver = new JButton("Volver Atras");
         btnReservar = new JButton("Reservar");
+        listaPacientes = new JButton("Pacientes");
 
         // Llenar los JComboBoxes
         medicoCombo.addItem("Seleccione Medico");
@@ -65,6 +71,7 @@ public class PerdirTurnoAdmin extends JPanel{
         mesCombo.addItem("Seleccione Mes");
         diaCombo.addItem("Seleccione Dia");
         horarioCombo.addItem("Seleccione Horario");
+        dniPaciente.setPreferredSize(new Dimension(150,25));
 
         // Agregar componentes al panel
         cen.add(new JLabel("Prestacion"));
@@ -80,11 +87,21 @@ public class PerdirTurnoAdmin extends JPanel{
         cen.add(new JLabel("Horario"));
         cen.add(horarioCombo);
         bot.add(btnVolver);
+        bot.add(dniPacientelb);
+        bot.add(dniPaciente);
         bot.add(btnReservar);
+        bot.add(listaPacientes);
 
         this.add(top,BorderLayout.NORTH);
         this.add(cen,BorderLayout.CENTER);
         this.add(bot,BorderLayout.SOUTH);
+
+        listaPacientes.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panelManager.showPanel("PacientesLista");
+            }
+        });
 
         // Llenar especialidades desde la base de datos
         cargarPrestaciones(Medico.getMedicos());
@@ -195,13 +212,19 @@ public class PerdirTurnoAdmin extends JPanel{
                             System.out.println("Vamos a registrar este turno:");
                             System.out.println(turno);
 
-                            //Turno.subirTurno(
-                            //        Integer.parseInt(turno.get(3)),
-                            //        Integer.parseInt( LoginPanel.getLoged().get(3) ), // dni de la persona logeada
-                            //        turno.get(2),
-                            //        LocalDate.parse(turno.get(0)),
-                            //        LocalTime.parse(turno.get(1)),
-                            //        Integer.parseInt(turno.get(4)));
+                            if (!dniPaciente.getText().isEmpty()){
+                                Turno.subirTurno(
+                                        Integer.parseInt(turno.get(3)),
+                                        Integer.parseInt( dniPaciente.getText() ), // dni de la persona logeada
+                                        turno.get(2),
+                                        LocalDate.parse(turno.get(0)),
+                                        LocalTime.parse(turno.get(1)),
+                                        Integer.parseInt(turno.get(4)));
+                            }
+                            else {
+                                JOptionPane.showMessageDialog(null, "incerte DNI");
+                            }
+
 
                             PerdirTurnoAdmin.turnos = null;
                             medicoCombo.removeAllItems();
@@ -323,18 +346,18 @@ public class PerdirTurnoAdmin extends JPanel{
     }
 
     private void cargarHorario(String diaSeleccionado,String mesSeleccionado,String medicoSeleccionado,String lugarSeleccionado){
-        //List<List> turnosDisponibles = Hospital.getTurnos(diaSeleccionado,mesSeleccionado,medicoSeleccionado,lugarSeleccionado);
+        List<List> turnosDisponibles = Hospital.getTurnos(diaSeleccionado,mesSeleccionado,medicoSeleccionado,lugarSeleccionado,123);
 
-        //horarioCombo.removeAllItems();
-        //horarioCombo.addItem("Seleccione Horario");
+        horarioCombo.removeAllItems();
+        horarioCombo.addItem("Seleccione Horario");
 
-        //for (List<String> turno : turnosDisponibles){
+        for (List<String> turno : turnosDisponibles){
 
-            //System.out.println(turno);
-            //horarioCombo.addItem(turno.get(1));
-        //}
+            System.out.println(turno);
+            horarioCombo.addItem(turno.get(1));
+        }
 
-        //PerdirTurno.turnos = turnosDisponibles;
+        PerdirTurnoAdmin.turnos = turnosDisponibles;
 
     }
 

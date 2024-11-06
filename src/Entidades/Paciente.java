@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-public class Paciente implements DAOIPedirTurno, PacienteFunciones {
+public class Paciente implements PacienteFunciones {
     private int tipo;
     private String username;
     private String password;
@@ -53,36 +53,6 @@ public class Paciente implements DAOIPedirTurno, PacienteFunciones {
 
 
     @Override
-    public List<Medico> getMedicos() {
-        DAOPedirTurno db = new DAOPedirTurno();
-        return db.getMedicos();
-    }
-
-    @Override
-    public List<List> getHospitalesFecha(int dni) {
-        DAOPedirTurno db = new DAOPedirTurno();
-        return db.getHospitalesFecha(dni);
-    }
-
-    @Override
-    public List<LocalDate> getDias(int dni, String direccion, LocalDate fecha) {
-        DAOPedirTurno db = new DAOPedirTurno();
-        return db.getDias(dni,direccion,fecha);
-    }
-
-    @Override
-    public List<List> getHorario(int dni, String direccion, LocalDate dia,int dniPaciente) {
-        DAOPedirTurno db = new DAOPedirTurno();
-        return db.getHorario(dni,direccion,dia,dniPaciente);
-    }
-
-    @Override
-    public void setTurno(int dniMedico, int dniPaciente, String direccion, LocalDate fecha, LocalTime hora, int consultorio) {
-        DAOPedirTurno db = new DAOPedirTurno();
-        db.setTurno(dniMedico,dniPaciente,direccion,fecha,hora,consultorio);
-    }
-
-    @Override
     public List<Turno> verTurnos(int dni,LocalDate desde, LocalDate hasta) {
         DAOVerTurno db = new DAOVerTurno();
         if (desde == null && hasta==null){
@@ -96,6 +66,11 @@ public class Paciente implements DAOIPedirTurno, PacienteFunciones {
     public static int getIdPaciente(int dni) {
         DAOPaciente p = new DAOPaciente();
         return p.getId(dni);
+    }
+
+    public static List<Paciente> getPacientes(){
+        DAOPaciente pdb = new DAOPaciente();
+        return pdb.getPacientes();
     }
 
 

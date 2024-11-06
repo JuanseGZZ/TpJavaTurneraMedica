@@ -9,7 +9,9 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class VerGananciasMedicos extends JPanel{
     private List<Turno> turnos;
@@ -51,7 +53,6 @@ public class VerGananciasMedicos extends JPanel{
             }
         };
 
-        center.addColumn("ID-turno"); // idturno
         center.addColumn("Paciente"); // nombre
         center.addColumn("Medico"); // medico nombre
         center.addColumn("Hora"); // desde
@@ -92,14 +93,13 @@ public class VerGananciasMedicos extends JPanel{
             public void actionPerformed(ActionEvent e) {
                 try {
                     Medico medico = new Medico();
-                    turnos = medico.verGanancias(desde.getText(),hasta.getText());
+                    turnos = medico.verGananciasTodos(desde.getText(), hasta.getText());
 
                     center.setRowCount(0);
 
-                    int iterador = 1;
+                    Map<String, Integer> recaudacionPorMedico = new HashMap<>();
                     for (Turno turno : turnos) {
                         center.addRow(new Object[]{
-                                iterador++,
                                 turno.getPaciente().getNombre(),
                                 turno.getMedico().getNombre(),
                                 turno.getHora(),
@@ -107,10 +107,33 @@ public class VerGananciasMedicos extends JPanel{
                                 turno.getLugar(),
                                 turno.getConsultorio()
                         });
-                    }
-                    // poniendo que 2000 cueste cada consulta
-                    JOptionPane.showMessageDialog(null,"La cantidad de plata recaudada entre esas fechas es de: "+(iterador-1)*2000);
 
+                        // Obtener el nombre completo del médico
+                        String nombreCompletoMedico = turno.getMedico().getNombre() + " " + turno.getMedico().getApellido();
+
+                        // Verificar si el médico ya está en el mapa
+                        recaudacionPorMedico.put(nombreCompletoMedico, recaudacionPorMedico.getOrDefault(nombreCompletoMedico, 0) + 1);
+                    }
+
+                    // Suponiendo que cada consulta cuesta 2000
+                    int precioConsulta = 2000;
+                    StringBuilder resultado = new StringBuilder("Ganancias por médico:\n");
+
+                    for (Map.Entry<String, Integer> entry : recaudacionPorMedico.entrySet()) {
+                        String medicoNombre = entry.getKey();
+                        int cantidadTurnos = entry.getValue();
+                        int ganancia = cantidadTurnos * precioConsulta; // Calcular la ganancia total
+
+                        resultado.append(medicoNombre)
+                                .append(": $")
+                                .append(ganancia)
+                                .append(" (")
+                                .append(cantidadTurnos)
+                                .append(" turnos)\n");
+                    }
+
+                    // Mostrar el resultado en un JOptionPane
+                    JOptionPane.showMessageDialog(null, resultado.toString());
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null,"Coloque bien las fechas \n\n err sy:"+ex.getMessage());
                 }

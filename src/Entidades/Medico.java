@@ -123,7 +123,6 @@ public class Medico implements MedicoFunciones {
 
     @Override
     public List<Turno> verGanancias(String desde, String hasta) {
-        //falta en db
 
         LocalDate fechaDesde = desde.isEmpty() ? null : LocalDate.parse(desde);
         LocalDate fechaHasta = hasta.isEmpty() ? null : LocalDate.parse(hasta);
@@ -153,6 +152,27 @@ public class Medico implements MedicoFunciones {
     public static int getId(int dni){
         DAOMedico md = new DAOMedico();
         return md.getId(dni);
+    }
+
+    public static List<Turno> verGananciasTodos(String desde, String hasta) {
+
+        LocalDate fechaDesde = desde.isEmpty() ? null : LocalDate.parse(desde);
+        LocalDate fechaHasta = hasta.isEmpty() ? null : LocalDate.parse(hasta);
+
+        DAOMedico dm = new DAOMedico();
+
+        if (fechaDesde==null && fechaHasta!=null) {
+            fechaDesde = LocalDate.of(2000,01,01);
+        } else if (fechaDesde!=null && fechaHasta==null) {
+            fechaHasta = LocalDate.of(3000,01,01);
+        } else if (fechaDesde==null && fechaHasta==null) {
+            fechaDesde = LocalDate.of(2000,01,01);
+            fechaHasta = LocalDate.of(3000,01,01);
+        }else {
+            System.out.println("no reconoce aca");
+        }
+        System.out.println(fechaDesde+" "+fechaHasta);
+        return dm.verTodosTurnos(fechaDesde,fechaHasta);
     }
 
 
