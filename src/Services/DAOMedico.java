@@ -33,7 +33,7 @@ public class DAOMedico extends DAOconecction implements DAOIMedico {
         }
     }
 
-    //falta ver los turnos que fueron tomados
+
     public List<Turno> verTurno(int dni, int tipo, LocalDate desde, LocalDate hasta) {
 
         // variables necesarias

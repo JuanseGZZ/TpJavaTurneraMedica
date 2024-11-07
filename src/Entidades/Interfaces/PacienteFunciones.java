@@ -3,6 +3,7 @@ package Entidades.Interfaces;
 import Entidades.Turno;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 public interface PacienteFunciones {
