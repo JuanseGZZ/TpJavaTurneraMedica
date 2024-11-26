@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class MenuAdmin extends JPanel {
-    private JButton btnVerGanancias, btnMisTurnos, btnLogout;
+    private JButton btnVerGanancias, btnMisTurnos, btnDispo, btnLogout;
     private PanelManager panelManager;
     public MenuAdmin(PanelManager panelManager){
         this.panelManager = panelManager;
@@ -26,6 +26,7 @@ public class MenuAdmin extends JPanel {
 
         btnVerGanancias = new JButton("Ver Ganancias");
         btnMisTurnos = new JButton("Reservar turnos");
+        btnDispo = new JButton("Consolidar Disponibilidad");
 
 
         btnLogout = new JButton("Logout");
@@ -39,6 +40,7 @@ public class MenuAdmin extends JPanel {
         // Añadir botones al panel de botones
         buttonPanel.add(btnVerGanancias);
         buttonPanel.add(btnMisTurnos);
+        buttonPanel.add(btnDispo);
 
 
         // bottom to com back
@@ -62,6 +64,13 @@ public class MenuAdmin extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 panelManager.showPanel("pedirTurnoAdmin");
+            }
+        });
+
+        btnDispo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panelManager.showPanel("AsignarDispo");
             }
         });
 

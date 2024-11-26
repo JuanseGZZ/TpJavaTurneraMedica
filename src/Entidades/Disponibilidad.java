@@ -1,7 +1,11 @@
 package Entidades;
 
+import Services.DAODisponibilidad;
+import Services.DAOMedico;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Map;
 
 public class Disponibilidad {
     private Medico medico;
@@ -67,4 +71,28 @@ public class Disponibilidad {
     public void setHorahasta(LocalTime horahasta) {
         this.horahasta = horahasta;
     }
+
+    static public Map<String,String> getHospitales(){
+        DAODisponibilidad dd = new DAODisponibilidad();
+        return dd.getHospitales();
+    }
+
+    static public Map<String,String> getMedicos(){
+        DAODisponibilidad dd = new DAODisponibilidad();
+        return dd.getMedicos();
+    }
+
+    static public Map<String,String> getConsultorios(String dni){
+        DAODisponibilidad dd = new DAODisponibilidad();
+        return dd.getConsultoriosPorHospital(dni);
+    }
+
+    static public int consolidar(int dniMedico,LocalDate desde,LocalDate hasta, String direccion,int concultorio,LocalTime desdeH,LocalTime hastaH){
+        DAOMedico dm = new DAOMedico();
+        int idmedico = dm.getId(dniMedico);
+        DAODisponibilidad dd = new DAODisponibilidad();
+        return dd.consolidar(idmedico,desde,hasta,direccion,concultorio,desdeH,hastaH);
+    }
+
+
 }
