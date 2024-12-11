@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="TurneraMedica:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/TurneraMedica_jar</output-path>
+    <root id="archive" name="TurneraMedica.jar">
+      <element id="module-output" name="TurneraMedica" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/calendar/lib/jcalendar-1.4.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="D:/Descargas/h2-2.3.232.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
